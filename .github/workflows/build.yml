@@ -181,6 +181,19 @@ jobs:
           }
           EOF
 
+      - name: Aplicar logo
+        run: |
+          if [ -f icon.png ] && [ -f banner.png ]; then
+            mkdir -p app/src/main/res/drawable-nodpi
+            cp icon.png app/src/main/res/drawable-nodpi/nx_icon.png
+            cp banner.png app/src/main/res/drawable-nodpi/nx_banner.png
+            sed -i 's|android:icon="@android:drawable/sym_def_app_icon"|android:icon="@drawable/nx_icon"|' app/src/main/AndroidManifest.xml
+            sed -i 's|android:banner="@android:drawable/sym_def_app_icon"|android:banner="@drawable/nx_banner"|' app/src/main/AndroidManifest.xml
+            echo "Logo aplicado"
+          else
+            echo "No hay icon.png / banner.png: se usa el icono por defecto"
+          fi
+
       - name: Compilar APK
         run: gradle assembleDebug --no-daemon
 
